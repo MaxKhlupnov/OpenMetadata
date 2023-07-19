@@ -36,3 +36,7 @@ where json#>>'{connection,config,scheme}' in ('impala', 'impala4');
 
 -- remove the dataModel references from Data Models
 UPDATE dashboard_data_model_entity SET json = json #- '{dataModels}';
+
+-- column deleted not needed for entities that don't support soft delete
+ALTER TABLE query_entity DROP COLUMN deleted;
+ALTER TABLE event_subscription_entity DROP COLUMN deleted;

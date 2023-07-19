@@ -1423,6 +1423,11 @@ public interface CollectionDAO {
 
     @SqlQuery("SELECT json FROM <table>")
     List<String> listAllEventsSubscriptions(@Define("table") String table);
+
+    @Override
+    default boolean supportsSoftDelete() {
+      return false;
+    }
   }
 
   interface ChartDAO extends EntityDAO<Chart> {
@@ -1797,6 +1802,11 @@ public interface CollectionDAO {
     @Override
     default String getNameHashColumn() {
       return "nameHash";
+    }
+
+    @Override
+    default boolean supportsSoftDelete() {
+      return false;
     }
 
     @Override
@@ -3265,15 +3275,6 @@ public interface CollectionDAO {
         "SELECT json FROM entity_extension_time_series WHERE entityFQNHash = :entityFQNHash AND jsonSchema = :jsonSchema "
             + "ORDER BY timestamp DESC LIMIT 1")
     String getLatestExtensionByFQN(@Bind("entityFQNHash") String entityFQNHash, @Bind("jsonSchema") String jsonSchema);
-
-    @SqlQuery(
-        "SELECT json FROM entity_extension_time_series where entityFQNHash = :entityFQNHash and jsonSchema = :jsonSchema "
-            + " AND timestamp >= :startTs and timestamp <= :endTs ORDER BY timestamp DESC")
-    List<String> listBetweenTimestampsByFQN(
-        @Bind("entityFQNHash") String entityFQNHash,
-        @Bind("jsonSchema") String jsonSchema,
-        @Bind("startTs") Long startTs,
-        @Bind("endTs") long endTs);
 
     @SqlQuery(
         "SELECT json FROM entity_extension_time_series where entityFQNHash = :entityFQNHash and extension = :extension "

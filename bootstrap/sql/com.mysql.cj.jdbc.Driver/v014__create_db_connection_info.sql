@@ -41,3 +41,7 @@ WHERE JSON_EXTRACT(json, '$.connection.config.scheme') IN ('impala', 'impala4');
 -- remove the dataModel references from Data Models
 UPDATE dashboard_data_model_entity
 SET json = JSON_REMOVE(json, '$.dataModels');
+
+-- column deleted not needed for entities that don't support soft delete
+ALTER TABLE query_entity DROP COLUMN deleted;
+ALTER TABLE event_subscription_entity DROP COLUMN deleted;
